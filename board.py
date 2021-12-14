@@ -1,4 +1,4 @@
-from player import Player
+# from player import Player
 
 class Space:
     def __init__(self, row, column):
@@ -37,6 +37,9 @@ class Board:
                 space = Space(i, j)
                 row.append(space)
             self._board.append(row)
+
+    def get_board(self):
+        return self._board
 
     def print_board(self):
         print("+--+--+--+--+--+")
