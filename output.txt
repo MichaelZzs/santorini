@@ -1,0 +1,328 @@
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+|0 |0Y|0 |0B|0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+|0 |0A|0 |0Z|0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 1, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+|0 |0Y|1 |0 |0 |
++--+--+--+--+--+
+|0 |0 |0B|0 |0 |
++--+--+--+--+--+
+|0 |0A|0 |0Z|0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 2, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+|0 |0Y|1 |0 |1 |
++--+--+--+--+--+
+|0 |0 |0B|0 |0Z|
++--+--+--+--+--+
+|0 |0A|0 |0 |0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 3, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |0 |1 |0 |0 |
++--+--+--+--+--+
+|0 |0Y|1B|0 |1 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0Z|
++--+--+--+--+--+
+|0 |0A|0 |0 |0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 4, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |0 |1 |0 |0 |
++--+--+--+--+--+
+|0 |0Y|1B|0 |1 |
++--+--+--+--+--+
+|0 |0 |0 |0Z|0 |
++--+--+--+--+--+
+|0 |0A|0 |1 |0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 5, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |0 |1 |0 |0 |
++--+--+--+--+--+
+|0 |0Y|1B|0 |1 |
++--+--+--+--+--+
+|0 |0 |0A|0Z|0 |
++--+--+--+--+--+
+|0 |0 |1 |1 |0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 6, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |0 |1 |0 |0 |
++--+--+--+--+--+
+|0 |0Y|1B|1 |1Z|
++--+--+--+--+--+
+|0 |0 |0A|0 |0 |
++--+--+--+--+--+
+|0 |0 |1 |1 |0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 7, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |0 |1 |1 |0 |
++--+--+--+--+--+
+|0 |0Y|1B|1A|1Z|
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+|0 |0 |1 |1 |0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 8, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1Y|1 |0 |
++--+--+--+--+--+
+|0 |0 |1B|1A|1Z|
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+|0 |0 |1 |1 |0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 9, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1Y|1 |0 |
++--+--+--+--+--+
+|0 |0 |1 |1A|1Z|
++--+--+--+--+--+
+|0 |0 |0B|0 |0 |
++--+--+--+--+--+
+|0 |0 |1 |2 |0 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 10, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1Y|1 |0 |
++--+--+--+--+--+
+|0 |0 |1 |1A|1 |
++--+--+--+--+--+
+|0 |0 |0B|0 |0Z|
++--+--+--+--+--+
+|0 |0 |1 |2 |1 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0 |
++--+--+--+--+--+
+Turn: 11, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1Y|1 |0 |
++--+--+--+--+--+
+|0 |0 |1 |1A|1 |
++--+--+--+--+--+
+|0 |0 |0 |0 |0Z|
++--+--+--+--+--+
+|0 |0 |1B|2 |1 |
++--+--+--+--+--+
+|0 |0 |1 |0 |0 |
++--+--+--+--+--+
+Turn: 12, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1Y|1 |0 |
++--+--+--+--+--+
+|0 |0 |1 |1A|1 |
++--+--+--+--+--+
+|0 |0 |0 |0 |1 |
++--+--+--+--+--+
+|0 |0 |1B|2 |1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |0 |
++--+--+--+--+--+
+Turn: 13, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1Y|1 |0 |
++--+--+--+--+--+
+|0 |0 |1 |1A|1 |
++--+--+--+--+--+
+|0 |0 |0 |0 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 14, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1Y|1 |1 |0 |
++--+--+--+--+--+
+|0 |1 |1 |1A|1 |
++--+--+--+--+--+
+|0 |0 |0 |0 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 15, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1Y|1 |1 |0 |
++--+--+--+--+--+
+|0 |1 |1A|1 |1 |
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 16, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1 |1 |0 |
++--+--+--+--+--+
+|1 |1Y|1A|1 |1 |
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 17, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1 |1 |0 |
++--+--+--+--+--+
+|1 |1Y|2 |1 |1 |
++--+--+--+--+--+
+|0 |0 |1A|0 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 18, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1 |1 |0 |
++--+--+--+--+--+
+|1Y|2 |2 |1 |1 |
++--+--+--+--+--+
+|0 |0 |1A|0 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 19, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1 |1 |0 |
++--+--+--+--+--+
+|1Y|2A|3 |1 |1 |
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 20, blue (YZ)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1 |1 |0 |
++--+--+--+--+--+
+|1 |2A|3 |1 |1 |
++--+--+--+--+--+
+|0Y|1 |1 |0 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 21, white (AB)
+Select a worker to move
+Select a direction to move (n, ne, e, se, s, sw, w, nw)
+Select a direction to build (n, ne, e, se, s, sw, w, nw)
++--+--+--+--+--+
+|0 |1 |1 |1 |0 |
++--+--+--+--+--+
+|1 |2 |3A|1 |1 |
++--+--+--+--+--+
+|0Y|1 |1 |1 |1 |
++--+--+--+--+--+
+|0 |0 |1 |2B|1Z|
++--+--+--+--+--+
+|0 |0 |1 |0 |1 |
++--+--+--+--+--+
+Turn: 22, blue (YZ)
+white has won
