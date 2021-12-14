@@ -1,74 +1,9 @@
 import sys
 import os
 
-class Worker:
-    def __init__(self, name):
-        self._name = name
-        self._row = None
-        self._column = None
-    
-    def move(self, row, column):
-        self._row = row
-        self._column = column
-
-    def build(self, direction):
-        pass
-
-    def get_name(self):
-        return self._name
-
-
-class Player:
-    def __init__(self, color, worker_1, worker_2):
-        self._color = color
-        self._worker_1 = worker_1
-        self._worker_2 = worker_2
-
-
-class Space:
-    def __init__(self, row, column):
-        self._height = 0
-        self._worker = None
-        self._row = row
-        self._column = column
-
-    def has_worker(self):
-        if not self._worker:
-            return False
-        else:
-            return True
-        
-    def place_worker(self, worker):
-        self._worker = worker
-    
-    def remove_worker(self):
-        self._worker = None
-
-    def print_space(self):
-        if not self.has_worker():
-            print("|{} ".format(self._height), end="")
-        else:
-            print("|{}{}".format(self._height, self._worker.get_name()), end="")
-
-
-class Board:
-    def __init__(self):
-        self._board = []
-        for i in range(5):
-            row = []
-            for j in range(5):
-                space = Space(i, j)
-                row.append(space)
-            self._board.append(row)
-
-    def print_board(self):
-        print("+--+--+--+--+--+")
-        for row in self._board:
-            for space in row:
-                space.print_space()
-            print("|")
-            print("+--+--+--+--+--+")
-        
+from worker import Worker
+from player import Player
+from board import Space, Board
 
 class Play:
     def __init__(self):
