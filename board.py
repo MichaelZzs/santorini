@@ -7,24 +7,26 @@ class Space:
         self._row = row
         self._column = column
 
+    def height(self):
+        return self._height
+
     def has_worker(self):
         if not self._worker:
             return False
         else:
             return True
         
-    def place_worker(self, worker):
+    def update_worker(self, worker=None):
         self._worker = worker
-    
-    def remove_worker(self):
-        self._worker = None
 
-    def print_space(self):
-        if not self.has_worker():
-            print("|{} ".format(self._height), end="")
-        else:
-            print("|{}{}".format(self._height, self._worker.get_name()), end="")
+    def build(self):
+        self._height += 1
 
+    def __str__(self):
+        worker = " "
+        if self.has_worker():
+            worker = self._worker.get_name()
+        return "|{}{}".format(self._height, worker)
 
 class Board:
     def __init__(self):
@@ -40,6 +42,6 @@ class Board:
         print("+--+--+--+--+--+")
         for row in self._board:
             for space in row:
-                space.print_space()
+                print(space, end="")
             print("|")
             print("+--+--+--+--+--+")
