@@ -1,8 +1,8 @@
 class Worker:
-    def __init__(self, name):
+    def __init__(self, name, row, column):
         self._name = name
-        self._row = None
-        self._column = None
+        self._row = row
+        self._column = column
         self._height = 0
     
     def move(self, row, column):
@@ -20,3 +20,9 @@ class Worker:
 
     def get_height(self):
         return self._height
+    
+    def get_row(self):
+        return self._row
+
+    def get_column(self):
+        return self._column

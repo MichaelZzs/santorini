@@ -1,29 +1,20 @@
-# from worker import Worker
-# from board import Board, Space
 import random
 
 directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
 
-direction_dict = {
-    "n": (-1, 0),
-    "ne": (-1, 1),
-    "e": (0, 1),
-    "se": (1, 1),
-    "s": (1, 0),
-    "sw": (1, -1),
-    "w": (0, -1),
-    "nw": (-1, -1)
-}
+def dist(x1, y1, x2, y2):
+    """
+    x1, y1 are your coords
+    x2, y2 are comparison coords
+    """
+    x = abs(x1 - x2)
+    y = abs(y1 - y2)
+
+    return max(x, y)
 
 class Player:
-    def __init__(self, color, worker_1, worker_2):
+    def __init__(self, color):
         self._color = color
-        self._worker_1 = worker_1
-        self._worker_2 = worker_2
-        if color == "white":
-            self._viable_workers = ["A", "B"]
-        elif color == "blue":
-            self._viable_workers = ["Y", "Z"]
     
     def __str__(self):
         if self._color == "white":
@@ -32,70 +23,150 @@ class Player:
             return "blue (YZ)"
 
     def viable_workers(self):
-        return self._viable_workers
-
-    def worker_1(self):
-        return self._worker_1
-
-    def worker_2(self):
-        return self._worker_2
+        if self._color == "white":
+            return ["A", "B"]
+        elif self._color == "blue":
+            return ["Y", "Z"]
 
     def get_color(self):
         return self._color
-    
-    def check_viable_move(self, worker, direction, board):
-        row_change, column_change = direction_dict[direction]
-        old_space = board[worker._row][worker._column]
-        new_row, new_column = worker._row + row_change, worker._column + column_change
-        if new_row < 0 or new_row > 4 or new_column < 0 or new_column > 4:
-            return False
-        new_space = board[new_row][new_column]
-        if new_space.height() > old_space.height() + 1 or new_space.has_worker():
-            return False
+
+    def calculate_score(self, worker, move, board):
+        """
+        Move score
+        """
+        # worker2 = self.get_partner_worker(worker, board)
+
+        # score1
+        height_score = self.get_height_score(worker)
+
+        # score2
+        center_score = self.get_center_score(worker)
+
+        # score3 - can use board, iterate through each space and do a O(N^2) search each time to find enemies
+        distance_score = self.get_distance_score(worker, board)
+
+        # Take the move if the new space guarantees a victory
+        # row = worker.get_row()
+        # column = worker.get_column()
+        # row_change, column_change = direction_dict[move]
+        # space = board[row + row_change][column + column_change]
+        # if space.height() == 3:
+        #     return 10000000
+        if board.new_space_height(worker, move) == 3:
+            return 10000000
+
+        score = 3 * height_score + 2 * center_score + 1 * distance_score
+        return score
+
+    def player_score(self, board):
+        """
+        Displayed score
+        """
+        # partner
+        workers = list(board.player_workers(self._color).values())
+        worker = workers[0]
+        worker2 = self.get_partner_worker(worker, board)
+
+        # score1
+        height_score = self.get_height_score(worker) + self.get_height_score(worker2)
+
+        # score2
+        center_score = self.get_center_score(worker) + self.get_center_score(worker2)
+
+        # score3 - can use board, iterate through each space and do a O(N^2) search each time to find enemies
+        distance_score = self.get_distance_score(worker, board)
+
+        return height_score, center_score, distance_score
+
+    def get_height_score(self, worker):
+        return worker.get_height()
+
+    def get_center_score(self, worker):
+        row = worker.get_row()
+        column = worker.get_column()
+        return 2 - dist(row, column, 2, 2)
+
+    def get_distance_score(self, worker, board):
+        row = worker.get_row()
+        column = worker.get_column()
+
+        partner_location = self.get_partner_location(worker, board)
+        enemy_locations = self.get_enemy_locations(worker, board)
+        enemy1 = enemy_locations[0]
+        enemy2 = enemy_locations[1]
+        distance_score = 8 - min(dist(row, column, enemy1[0], enemy1[1]), dist(partner_location[0], 
+                                 partner_location[1], enemy1[0], enemy1[1])) - min(dist(row, column, enemy2[0], enemy2[1]), 
+                                                                                   dist(partner_location[0], partner_location[1], enemy2[0], enemy2[1]))
+        return distance_score
+
+    def get_enemy_locations(self, worker, board):
+        # Find enemy names
+        name = worker.get_name()
+        if name in ['A', 'B']:
+            enemies = ['Y', 'Z']
         else:
-            return True
+            enemies = ['A', 'B']
+        
+        # Get locations of enemies
+        # float_board = [item for sublist in board for item in sublist]
+        locs = []
+        for space in board:
+            worker = space.get_worker()
+            if worker and worker.get_name() in enemies:
+                enemy_row = worker.get_row()
+                enemy_column = worker.get_column()
+                locs.append((enemy_row, enemy_column))
 
-    def check_viable_build(self, worker, direction, board):
-        row_change, column_change = direction_dict[direction]
-        build_row, build_column = worker._row + row_change, worker._column + column_change
-        if build_row < 0 or build_row > 4 or build_column < 0 or build_column > 4:
-            return False
-        build_space = board[build_row][build_column]
-        if build_space.height() >= 4 or build_space.has_worker():
-            return False
-        else:
-            return True
+        return locs
 
-    def move_worker(self, worker, row, column, board):
-        new_space = board[row][column]
-        new_space.update_worker(worker)
-        if worker._row != None:
-            old_space = board[worker._row][worker._column]
-            old_space.update_worker()
-        worker.move(row, column)
-        worker.set_height(new_space.height())
+    def get_partner_location(self, worker, board):
+        # Find partner name
+        name = worker.get_name()
+        if name == 'A':
+            helper = 'B'
+        elif name == 'B':
+            helper = 'A'
+        elif name == 'Y':
+            helper = 'Z'
+        elif name == 'Z':
+            helper = 'Y'
 
-    def all_viable_moves(self, worker, board):
-        list = []
-        for dir in directions:
-            if self.check_viable_move(worker, dir, board):
-                list.append(dir)
-        return list
+        # Get location of partner
+        # float_board = [item for sublist in board for item in sublist]
+        for space in board:
+            worker = space.get_worker()
+            if worker and worker.get_name() == helper:
+                helper_row = worker.get_row()
+                helper_column = worker.get_column()
+                return (helper_row, helper_column)
 
-    def all_viable_builds(self, worker, board):
-        list = []
-        for dir in directions:
-            if self.check_viable_build(worker, dir, board):
-                list.append(dir)
-        return list
+    def get_partner_worker(self, worker, board):
+        # Find partner name
+        name = worker.get_name()
+        if name == 'A':
+            helper = 'B'
+        elif name == 'B':
+            helper = 'A'
+        elif name == 'Y':
+            helper = 'Z'
+        elif name == 'Z':
+            helper = 'Y'
 
-    def make_move(self):
+        # Get location of partner
+        # float_board = [item for sublist in board for item in sublist]
+        for space in board:
+            worker = space.get_worker()
+            if worker and worker.get_name() == helper:
+                return worker
+
+    def make_move(self, board):
         raise NotImplementedError
 
 
 class Human(Player):
-    def __init__(self, color, worker_1, worker_2):
-        super().__init__(color, worker_1, worker_2)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def make_move(self, board):
         while True:
@@ -105,66 +176,90 @@ class Human(Player):
             elif name not in self.viable_workers():
                 print("That is not your worker")
             else:
-                if self.worker_1().get_name() == name:
-                    worker = self.worker_1()
-                elif self.worker_2().get_name() == name:
-                    worker = self.worker_2()
+                worker = board.get_worker(self._color, name)
                 break
         
         while True:
             move_dir = input("Select a direction to move (n, ne, e, se, s, sw, w, nw)\n")
             if move_dir not in directions:
                 print("Not a valid direction")
-            elif not self.check_viable_move(worker, move_dir, board):
+            elif not board.check_viable_move(worker, move_dir):
                 print("Cannot move {}".format(move_dir))
             else:
-                row_change, column_change = direction_dict[move_dir]
-                self.move_worker(worker, worker._row + row_change, worker._column + column_change, board)
+                board.move_worker(worker, move_dir)
                 break
 
         while True:
             build_dir = input("Select a direction to build (n, ne, e, se, s, sw, w, nw)\n")
             if build_dir not in directions:
                 print("Not a valid direction")
-            elif not self.check_viable_build(worker, build_dir, board):
+            elif not board.check_viable_build(worker, build_dir):
                 print("Cannot build {}".format(build_dir))
             else:
-                row_change, column_change = direction_dict[build_dir]
-                build_space = board[worker._row + row_change][worker._column + column_change]
-                if build_space.height() == 4 or build_space.has_worker():
-                    print("Cannot build {}".format(build_dir))
-                else:
-                    build_space.build()
-                    break
+                board.build(worker, build_dir)
+                break
 
 
 class Random(Player):
-    def __init__(self, color, worker_1, worker_2):
-        super().__init__(color, worker_1, worker_2)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def make_move(self, board):
-        choice = random.choice([1, 2])
-        if choice == 1:
-            worker = self._worker_1
-        elif choice == 2:
-            worker = self._worker_2
+        worker_1 = list(board.player_workers(self._color).values())[0]
+        worker_2 = list(board.player_workers(self._color).values())[1]
+        total_viable_moves_num = len(board.all_viable_moves(worker_1)) + len(board.all_viable_moves(worker_2))
+        choice = random.randint(1, total_viable_moves_num)
+        if choice <= len(board.all_viable_moves(worker_1)):
+            worker = worker_1
+        else:
+            worker = worker_2
 
-        viable_moves = self.all_viable_moves(worker, board)
-        if len(viable_moves) == 0:
-            if choice == 1:
-                worker = self._worker_2
-                viable_moves = self.all_viable_moves(worker, board)
-            elif choice == 2:
-                worker = self._worker_1
-                viable_moves = self.all_viable_moves(worker, board)
-        move_dir = random.choice(viable_moves)
-        row_change, column_change = direction_dict[move_dir]
-        self.move_worker(worker, worker._row + row_change, worker._column + column_change, board)
+        move_dir = random.choice(board.all_viable_moves(worker))
+        board.move_worker(worker, move_dir)
 
-        viable_builds = self.all_viable_builds(worker, board)
-        build_dir = random.choice(viable_builds)
-        row_change, column_change = direction_dict[build_dir]
-        build_space = board[worker._row + row_change][worker._column + column_change]
-        build_space.build()
+        build_dir = random.choice(board.all_viable_builds(worker))
+        board.build(worker, build_dir)
         
         print("{},{},{}".format(worker.get_name(), move_dir, build_dir))
+
+class Heuristic(Player):
+    def __init__(self, display=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if display:
+            self._display = True
+        else:
+            self._display = False
+
+    def make_move(self, board):
+        # calculate scores for a worker and their moves
+        scores = []
+        workers = list(board.player_workers(self._color).values())
+
+        worker_1 = workers[0]
+        # displayed_score = self.player_score(board)
+        # print(displayed_score)
+        viable_moves = board.all_viable_moves(worker_1)
+        for move in viable_moves:
+            score = self.calculate_score(worker_1, move, board)
+            scores.append((score, move, 1))
+
+        worker_2 = workers[1]
+        viable_moves = board.all_viable_moves(worker_2)
+        for move in viable_moves:
+            score = self.calculate_score(worker_2, move, board)
+            scores.append((score, move, 2))
+
+        random.shuffle(scores)
+        score, move_dir, worker_id = max(scores)
+        if worker_id == 1:
+            worker = worker_1
+        else:
+            worker = worker_2
+
+        board.move_worker(worker, move_dir)
+
+        viable_builds = board.all_viable_builds(worker)
+        build_dir = random.choice(viable_builds)
+        board.build(worker, build_dir)
+
+        print("{},{},{}".format(worker.get_name(), move, build_dir))
