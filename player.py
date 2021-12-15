@@ -245,7 +245,7 @@ class Heuristic(Player):
             scores.append((score, move, 2))
 
         random.shuffle(scores)
-        score, move_dir, worker_id = max(scores)
+        score, move_dir, worker_id = max(scores, key=lambda x: x[0])
         if worker_id == 1:
             worker = worker_1
         else:
