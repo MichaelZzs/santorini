@@ -1,6 +1,14 @@
 import random
 
 directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
+opposite_move = {"n":"s", 
+             "ne":"sw", 
+             "e":"w",
+             "se":"nw",
+             "s":"n",
+             "sw":"ne",
+             "w":"e",
+             "nw":"se"}
 
 def dist(x1, y1, x2, y2):
     """
@@ -31,34 +39,6 @@ class Player:
     def get_color(self):
         return self._color
 
-    def calculate_score(self, worker, move, board):
-        """
-        Move score
-        """
-        # worker2 = self.get_partner_worker(worker, board)
-
-        # score1
-        height_score = self.get_height_score(worker)
-
-        # score2
-        center_score = self.get_center_score(worker)
-
-        # score3 - can use board, iterate through each space and do a O(N^2) search each time to find enemies
-        distance_score = self.get_distance_score(worker, board)
-
-        # Take the move if the new space guarantees a victory
-        # row = worker.get_row()
-        # column = worker.get_column()
-        # row_change, column_change = direction_dict[move]
-        # space = board[row + row_change][column + column_change]
-        # if space.height() == 3:
-        #     return 10000000
-        if board.new_space_height(worker, move) == 3:
-            return 10000000
-
-        score = 3 * height_score + 2 * center_score + 1 * distance_score
-        return score
-
     def player_score(self, board):
         """
         Displayed score
@@ -87,7 +67,24 @@ class Player:
         column = worker.get_column()
         return 2 - dist(row, column, 2, 2)
 
+    def get_distance_score_self(self, worker, board):
+        """
+        Distance score for one worker
+        """
+        row = worker.get_row()
+        column = worker.get_column()
+
+        enemy_locations = self.get_enemy_locations(worker, board)
+        enemy1 = enemy_locations[0]
+        enemy2 = enemy_locations[1]
+
+        distance_score = 8 - dist(row, column, enemy1[0], enemy1[1]) - dist(row, column, enemy2[0], enemy2[1])
+        return distance_score
+
     def get_distance_score(self, worker, board):
+        """
+        Distance scores for both workers
+        """
         row = worker.get_row()
         column = worker.get_column()
 
@@ -236,8 +233,6 @@ class Heuristic(Player):
         workers = list(board.player_workers(self._color).values())
 
         worker_1 = workers[0]
-        # displayed_score = self.player_score(board)
-        # print(displayed_score)
         viable_moves = board.all_viable_moves(worker_1)
         for move in viable_moves:
             score = self.calculate_score(worker_1, move, board)
@@ -263,3 +258,31 @@ class Heuristic(Player):
         board.build(worker, build_dir)
 
         print("{},{},{}".format(worker.get_name(), move, build_dir))
+
+    def calculate_score(self, worker, move, board):
+        """
+        Move score
+        """
+
+        # Check if move guarantees victory
+        if board.new_space_height(worker, move) == 3:
+            return 10000000
+
+        # move here
+        board.move_worker(worker, move)
+
+        # score1
+        height_score = self.get_height_score(worker)
+
+        # score2
+        center_score = self.get_center_score(worker)
+
+        # score3 - can use board, iterate through each space and do a O(N^2) search each time to find enemies
+        distance_score = self.get_distance_score_self(worker, board)
+
+        # move back
+        move_back = opposite_move[move]
+        board.move_worker(worker, move_back)
+
+        score = 3 * height_score + 2 * center_score + 1 * distance_score
+        return score
