@@ -19,7 +19,7 @@ class Santorini:
             self._player_1 = Random("white")
         elif white == "heuristic":
             if display == "on":
-                self._player_1 = Heuristic(color="white", display=True)
+                self._player_1 = Heuristic(color="white")
             else:
                 self._player_1 = Heuristic(color="white")
         else:
@@ -30,7 +30,7 @@ class Santorini:
             self._player_2 = Random("blue")
         elif blue == "heuristic":
             if display == "on":
-                self._player_2 = Heuristic(color="blue", display=True)
+                self._player_2 = Heuristic(color="blue")
             else:
                 self._player_2 = Heuristic(color="blue")
         else:

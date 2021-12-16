@@ -1,4 +1,5 @@
 import random
+from abc import ABC, abstractmethod
 
 directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
 opposite_move = {"n":"s", 
@@ -46,50 +47,36 @@ class Player:
         # partner
         workers = list(board.player_workers(self._color).values())
         worker = workers[0]
-        worker2 = self.get_partner_worker(worker, board)
+        worker2 = self._get_partner_worker(worker, board)
 
         # score1
-        height_score = self.get_height_score(worker) + self.get_height_score(worker2)
+        height_score = self._get_height_score(worker) + self._get_height_score(worker2)
 
         # score2
-        center_score = self.get_center_score(worker) + self.get_center_score(worker2)
+        center_score = self._get_center_score(worker) + self._get_center_score(worker2)
 
         # score3 - can use board, iterate through each space and do a O(N^2) search each time to find enemies
-        distance_score = self.get_distance_score(worker, board)
+        distance_score = self._get_distance_score(worker, board)
 
         return height_score, center_score, distance_score
 
-    def get_height_score(self, worker):
+    def _get_height_score(self, worker):
         return worker.get_height()
 
-    def get_center_score(self, worker):
+    def _get_center_score(self, worker):
         row = worker.get_row()
         column = worker.get_column()
         return 2 - dist(row, column, 2, 2)
 
-    def get_distance_score_self(self, worker, board):
-        """
-        Distance score for one worker
-        """
-        row = worker.get_row()
-        column = worker.get_column()
-
-        enemy_locations = self.get_enemy_locations(worker, board)
-        enemy1 = enemy_locations[0]
-        enemy2 = enemy_locations[1]
-
-        distance_score = 8 - dist(row, column, enemy1[0], enemy1[1]) - dist(row, column, enemy2[0], enemy2[1])
-        return distance_score
-
-    def get_distance_score(self, worker, board):
+    def _get_distance_score(self, worker, board):
         """
         Distance scores for both workers
         """
         row = worker.get_row()
         column = worker.get_column()
 
-        partner_location = self.get_partner_location(worker, board)
-        enemy_locations = self.get_enemy_locations(worker, board)
+        partner_location = self._get_partner_location(worker, board)
+        enemy_locations = self._get_enemy_locations(worker, board)
         enemy1 = enemy_locations[0]
         enemy2 = enemy_locations[1]
         distance_score = 8 - min(dist(row, column, enemy1[0], enemy1[1]), dist(partner_location[0], 
@@ -97,7 +84,7 @@ class Player:
                                                                                    dist(partner_location[0], partner_location[1], enemy2[0], enemy2[1]))
         return distance_score
 
-    def get_enemy_locations(self, worker, board):
+    def _get_enemy_locations(self, worker, board):
         # Find enemy names
         name = worker.get_name()
         if name in ['A', 'B']:
@@ -117,7 +104,7 @@ class Player:
 
         return locs
 
-    def get_partner_location(self, worker, board):
+    def _get_partner_location(self, worker, board):
         # Find partner name
         name = worker.get_name()
         if name == 'A':
@@ -138,7 +125,7 @@ class Player:
                 helper_column = worker.get_column()
                 return (helper_row, helper_column)
 
-    def get_partner_worker(self, worker, board):
+    def _get_partner_worker(self, worker, board):
         # Find partner name
         name = worker.get_name()
         if name == 'A':
@@ -158,14 +145,23 @@ class Player:
                 return worker
 
     def make_move(self, board):
-        raise NotImplementedError
+        worker = self._player_move_worker(board)
+        build_dir = self._player_build(worker, board)
+
+    @abstractmethod
+    def _player_move_worker(self, worker, board):
+        pass
+
+    @abstractmethod
+    def _player_build(self, worker, board):
+        pass
 
 
 class Human(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def make_move(self, board):
+    def _player_move_worker(self, board):
         while True:
             name = input("Select a worker to move\n")
             if name not in ["A", "B", "Y", "Z"]:
@@ -175,7 +171,7 @@ class Human(Player):
             else:
                 worker = board.get_worker(self._color, name)
                 break
-        
+
         while True:
             move_dir = input("Select a direction to move (n, ne, e, se, s, sw, w, nw)\n")
             if move_dir not in directions:
@@ -185,7 +181,10 @@ class Human(Player):
             else:
                 board.move_worker(worker, move_dir)
                 break
-
+        
+        return worker
+    
+    def _player_build(self, worker, board):
         while True:
             build_dir = input("Select a direction to build (n, ne, e, se, s, sw, w, nw)\n")
             if build_dir not in directions:
@@ -195,15 +194,18 @@ class Human(Player):
             else:
                 board.build(worker, build_dir)
                 break
+        
+        return build_dir
 
 
 class Random(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def make_move(self, board):
-        worker_1 = list(board.player_workers(self._color).values())[0]
-        worker_2 = list(board.player_workers(self._color).values())[1]
+    def _player_move_worker(self, board):
+        workers = list(board.player_workers(self._color).values())
+        worker_1, worker_2 = workers[0], workers[1]
+
         total_viable_moves_num = len(board.all_viable_moves(worker_1)) + len(board.all_viable_moves(worker_2))
         choice = random.randint(1, total_viable_moves_num)
         if choice <= len(board.all_viable_moves(worker_1)):
@@ -213,22 +215,21 @@ class Random(Player):
 
         move_dir = random.choice(board.all_viable_moves(worker))
         board.move_worker(worker, move_dir)
+        print("{},{},".format(worker.get_name(), move_dir), end="")
+        return worker
 
+    def _player_build(self, worker, board):
         build_dir = random.choice(board.all_viable_builds(worker))
         board.build(worker, build_dir)
-        
-        print("{},{},{}".format(worker.get_name(), move_dir, build_dir))
+        print(build_dir)
+        return build_dir
+
 
 class Heuristic(Player):
-    def __init__(self, display=False, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if display:
-            self._display = True
-        else:
-            self._display = False
 
-    def make_move(self, board):
-        # calculate scores for a worker and their moves
+    def _player_move_worker(self, board):
         scores = []
         workers = list(board.player_workers(self._color).values())
 
@@ -250,14 +251,17 @@ class Heuristic(Player):
             worker = worker_1
         else:
             worker = worker_2
-
+        
         board.move_worker(worker, move_dir)
+        print("{},{},".format(worker.get_name(), move_dir))
+        return worker
 
+    def _player_build(self, worker, board):
         viable_builds = board.all_viable_builds(worker)
         build_dir = random.choice(viable_builds)
         board.build(worker, build_dir)
-
-        print("{},{},{}".format(worker.get_name(), move, build_dir))
+        print(build_dir)
+        return build_dir
 
     def calculate_score(self, worker, move, board):
         """
@@ -272,13 +276,13 @@ class Heuristic(Player):
         board.move_worker(worker, move)
 
         # score1
-        height_score = self.get_height_score(worker)
+        height_score = self._get_height_score(worker)
 
         # score2
-        center_score = self.get_center_score(worker)
+        center_score = self._get_center_score(worker)
 
         # score3 - can use board, iterate through each space and do a O(N^2) search each time to find enemies
-        distance_score = self.get_distance_score_self(worker, board)
+        distance_score = self._get_distance_score_self(worker, board)
 
         # move back
         move_back = opposite_move[move]
@@ -286,3 +290,17 @@ class Heuristic(Player):
 
         score = 3 * height_score + 2 * center_score + 1 * distance_score
         return score
+
+    def _get_distance_score_self(self, worker, board):
+        """
+        Distance score for one worker
+        """
+        row = worker.get_row()
+        column = worker.get_column()
+
+        enemy_locations = self._get_enemy_locations(worker, board)
+        enemy1 = enemy_locations[0]
+        enemy2 = enemy_locations[1]
+
+        distance_score = 8 - dist(row, column, enemy1[0], enemy1[1]) - dist(row, column, enemy2[0], enemy2[1])
+        return distance_score
