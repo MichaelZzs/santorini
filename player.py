@@ -21,7 +21,7 @@ def dist(x1, y1, x2, y2):
 
     return max(x, y)
 
-class Player:
+class Player(ABC):
     def __init__(self, color):
         self._color = color
     
