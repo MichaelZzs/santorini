@@ -1,0 +1,6 @@
+Allen:
+I worked on interface, human player, random player, and design patterns.
+I had a great time working with Michael. We efficiently divided which parts of the assignment we would work on, and worked closely
+throughout the assignment to catch any bugs and talk about implementation details. Specifically, we talked about what design patterns
+would best fit our design of the program, and determined that Iterator, Strategy, Memento, and Command patterns would fit the best. I 
+learned a lot about implementing design patterns, "Pythonic" code, and working with a partner. 
