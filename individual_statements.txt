@@ -1,0 +1,5 @@
+Michael:
+-Worked on interface, heuristic player, UML diagram, write up
+
+Allen:
+-Worked on interface, human player, random player, design patterns
