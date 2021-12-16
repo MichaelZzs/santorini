@@ -93,7 +93,6 @@ class Player(ABC):
             enemies = ['A', 'B']
         
         # Get locations of enemies
-        # float_board = [item for sublist in board for item in sublist]
         locs = []
         for space in board:
             worker = space.get_worker()
@@ -117,7 +116,6 @@ class Player(ABC):
             helper = 'Y'
 
         # Get location of partner
-        # float_board = [item for sublist in board for item in sublist]
         for space in board:
             worker = space.get_worker()
             if worker and worker.get_name() == helper:
@@ -138,22 +136,13 @@ class Player(ABC):
             helper = 'Y'
 
         # Get location of partner
-        # float_board = [item for sublist in board for item in sublist]
         for space in board:
             worker = space.get_worker()
             if worker and worker.get_name() == helper:
                 return worker
 
+    @abstractmethod
     def make_move(self, board):
-        worker = self._player_move_worker(board)
-        build_dir = self._player_build(worker, board)
-
-    @abstractmethod
-    def _player_move_worker(self, worker, board):
-        pass
-
-    @abstractmethod
-    def _player_build(self, worker, board):
         pass
 
 
@@ -161,7 +150,7 @@ class Human(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _player_move_worker(self, board):
+    def make_move(self, board):
         while True:
             name = input("Select a worker to move\n")
             if name not in ["A", "B", "Y", "Z"]:
@@ -181,10 +170,7 @@ class Human(Player):
             else:
                 board.move_worker(worker, move_dir)
                 break
-        
-        return worker
-    
-    def _player_build(self, worker, board):
+
         while True:
             build_dir = input("Select a direction to build (n, ne, e, se, s, sw, w, nw)\n")
             if build_dir not in directions:
@@ -194,15 +180,13 @@ class Human(Player):
             else:
                 board.build(worker, build_dir)
                 break
-        
-        return build_dir
 
 
 class Random(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _player_move_worker(self, board):
+    def make_move(self, board):
         workers = list(board.player_workers(self._color).values())
         worker_1, worker_2 = workers[0], workers[1]
 
@@ -215,21 +199,17 @@ class Random(Player):
 
         move_dir = random.choice(board.all_viable_moves(worker))
         board.move_worker(worker, move_dir)
-        print("{},{},".format(worker.get_name(), move_dir), end="")
-        return worker
-
-    def _player_build(self, worker, board):
+        
         build_dir = random.choice(board.all_viable_builds(worker))
         board.build(worker, build_dir)
-        print(build_dir)
-        return build_dir
+        print("{},{},{}".format(worker.get_name(), move_dir, build_dir))
 
 
 class Heuristic(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _player_move_worker(self, board):
+    def make_move(self, board):
         scores = []
         workers = list(board.player_workers(self._color).values())
 
@@ -253,21 +233,16 @@ class Heuristic(Player):
             worker = worker_2
         
         board.move_worker(worker, move_dir)
-        print("{},{},".format(worker.get_name(), move_dir))
-        return worker
 
-    def _player_build(self, worker, board):
         viable_builds = board.all_viable_builds(worker)
         build_dir = random.choice(viable_builds)
         board.build(worker, build_dir)
-        print(build_dir)
-        return build_dir
+        print("{},{},{}".format(worker.get_name(), move_dir, build_dir))
 
     def calculate_score(self, worker, move, board):
         """
         Move score
         """
-
         # Check if move guarantees victory
         if board.new_space_height(worker, move) == 3:
             return 10000000
