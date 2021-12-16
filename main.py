@@ -3,6 +3,7 @@ import sys
 from player import Human, Random, Heuristic
 from board import Board
 from memento import Caretaker
+from command import NextCommand, UndoCommand, RedoCommand
 
 directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
 
@@ -83,23 +84,29 @@ class Santorini:
                 while True:
                     action = input("undo, redo, or next\n")
                     if action == "next":
-                        self._curr.make_move(self._board)
-                        self._undo_redo_manager.remove(turn)
-                        self._undo_redo_manager.create()
-                        turn += 1
-                        self.change_player()
+                        # self._curr.make_move(self._board)
+                        # self._undo_redo_manager.remove(turn)
+                        # self._undo_redo_manager.create()
+                        # turn += 1
+                        # self.change_player()
+                        next = NextCommand(self._undo_redo_manager, self._curr, turn, self._board, self.change_player)
+                        turn = next.execute()
                         break
                     elif action == "undo":
-                        success = self._undo_redo_manager.restore(turn - 2)
-                        if success:
-                            turn -= 1
-                            self.change_player()
+                        # success = self._undo_redo_manager.restore(turn - 2)
+                        # if success:
+                        #     turn -= 1
+                        #     self.change_player()
+                        undo = UndoCommand(self._undo_redo_manager, turn, self.change_player)
+                        new_turn = undo.execute()
+                        if new_turn > 0:
+                            turn = new_turn
                         break
                     elif action == "redo":
-                        success = self._undo_redo_manager.restore(turn)
-                        if success:
-                            turn += 1
-                            self.change_player()
+                        redo = RedoCommand(self._undo_redo_manager, turn, self.change_player)
+                        new_turn = redo.execute()
+                        if new_turn > 0:
+                            turn = new_turn
                         break
             else:
                 self._curr.make_move(self._board)
